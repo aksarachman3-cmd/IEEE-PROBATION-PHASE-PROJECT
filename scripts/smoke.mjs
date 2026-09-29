@@ -15,6 +15,14 @@
  *    so routing, auth, validation, uploads and the database are all covered.
  *
  * Usage:  npm run smoke
+ *
+ * This runs `next dev`, not `next start`. A production server snapshots
+ * `public/` at boot and would therefore never serve a file uploaded during the
+ * run, which makes the upload round-trip untestable. Its build output goes to
+ * `.next-smoke/` so testing never invalidates a production build.
+ *
+ * The consequence is that this script does not cover how `next start` serves
+ * runtime uploads; see the limitations section of the README.
  */
 import { spawn, spawnSync } from "node:child_process";
 import { mkdir, rm, stat } from "node:fs/promises";
@@ -127,6 +135,73 @@ const PNG_BYTES = Buffer.from(
 /** A script disguised as a PNG - must be rejected on content, not filename. */
 const FAKE_PNG = Buffer.from("<script>alert(1)</script>", "utf8");
 
+/**
+ * A WAV file: a real RIFF container, but not WebP.
+ *
+ * The signature check used to accept any buffer starting with `RIFF`, so this
+ * passed as an image even though it is audio.
+ */
+const WAV_AS_WEBP = Buffer.concat([
+  Buffer.from("RIFF", "latin1"),
+  (() => {
+    const size = Buffer.alloc(4);
+    size.writeUInt32LE(28, 0);
+    return size;
+  })(),
+  Buffer.from("WAVEfmt ", "latin1"),
+  Buffer.alloc(16),
+]);
+
+/** A well-formed WebP container, to prove the check still accepts real ones. */
+const REAL_WEBP = Buffer.concat([
+  Buffer.from("RIFF", "latin1"),
+  (() => {
+    const size = Buffer.alloc(4);
+    size.writeUInt32LE(20, 0);
+    return size;
+  })(),
+  Buffer.from("WEBPVP8 ", "latin1"),
+  (() => {
+    const size = Buffer.alloc(4);
+    size.writeUInt32LE(8, 0);
+    return size;
+  })(),
+  Buffer.alloc(8),
+]);
+
+/** An ISO-BMFF file that is not AVIF: a `ftyp` box branded QuickTime. */
+const QUICKTIME_AS_AVIF = Buffer.concat([
+  (() => {
+    const size = Buffer.alloc(4);
+    size.writeUInt32BE(20, 0);
+    return size;
+  })(),
+  Buffer.from("ftypqt  ", "latin1"),
+  (() => {
+    const version = Buffer.alloc(4);
+    version.writeUInt32BE(0, 0);
+    return version;
+  })(),
+  Buffer.from("qt  ", "latin1"),
+]);
+
+/** A real AVIF container, to prove the check still accepts brand `mif1`. */
+const REAL_AVIF = Buffer.concat([
+  (() => {
+    // 4 header + 4 "ftyp" + 4 major + 4 minor + 8 compatible brands.
+    const size = Buffer.alloc(4);
+    size.writeUInt32BE(24, 0);
+    return size;
+  })(),
+  Buffer.from("ftypmif1", "latin1"),
+  (() => {
+    const version = Buffer.alloc(4);
+    version.writeUInt32BE(0, 0);
+    return version;
+  })(),
+  Buffer.from("mif1avif", "latin1"),
+]);
+
 function eventPayload(overrides = {}) {
   return {
     title: "Smoke Test Workshop",
@@ -149,10 +224,23 @@ function eventPayload(overrides = {}) {
   };
 }
 
-function postImage(id, bytes, name, type) {
+async function postImage(id, bytes, name, type) {
   const form = new FormData();
   form.set("image", new File([bytes], name, { type }));
-  return api(`/api/events/${id}/image`, { method: "POST", body: form, auth: true });
+  const response = await api(`/api/events/${id}/image`, {
+    method: "POST",
+    body: form,
+    auth: true,
+  });
+
+  // Track every accepted file so the cleanup below can remove it, and leave
+  // anything in public/uploads that this run did not create.
+  const url = response.body?.data?.imageUrl;
+  if (response.status === 200 && typeof url === "string" && url.startsWith("/uploads/")) {
+    createdUploads.add(join(UPLOAD_DIR, basename(url)));
+  }
+
+  return response;
 }
 
 /* ------------------------------- server boot ------------------------------- */
@@ -243,9 +331,9 @@ async function main() {
   const logStream = createWriteStream(SERVER_LOG, { flags: "w" });
   logStream.on("error", () => {});
 
-  // `NODE_ENV` must stay at its default here: `next dev` refuses to start when
-  // it is forced to "production", and forcing "development" would break the
-  // session cookie (Secure) the auth checks rely on.
+  // `NODE_ENV` must stay at its default: `next dev` refuses to start when it is
+  // forced to "production", and forcing "development" would drop the Secure
+  // flag the session cookie relies on.
   server = spawn("npx", ["next", "dev", "--port", String(PORT)], {
     cwd: ROOT,
     stdio: logStream ? ["ignore", logStream.fd, logStream.fd] : "ignore",
@@ -285,6 +373,22 @@ async function main() {
     !(list.body?.data ?? []).some((e) => e.status === "ARCHIVED"),
   );
   check("pagination metadata is present", typeof list.body?.meta?.total === "number");
+
+  // A public `?status=` may narrow the visible set but must never widen it.
+  const draftStatus = await api("/api/events?status=DRAFT");
+  equal("GET /api/events?status=DRAFT -> 200", draftStatus.status, 200);
+  check(
+    "...and returns an empty list rather than leaking drafts",
+    (draftStatus.body?.data ?? []).length === 0,
+    "a DRAFT event was returned to an unauthenticated caller",
+  );
+
+  const publishedStatus = await api("/api/events?status=PUBLISHED");
+  equal("GET /api/events?status=PUBLISHED -> 200", publishedStatus.status, 200);
+  check(
+    "...and a status that is public still returns events",
+    (publishedStatus.body?.data ?? []).length > 0,
+  );
 
   const publicEvents = list.body?.data ?? [];
 
@@ -412,6 +516,14 @@ async function main() {
     "attendees" in (overCapacity.body?.error?.details ?? {}),
   );
 
+  // `Date.UTC` rolls impossible dates forward, so these used to be accepted
+  // and silently stored as a different day.
+  for (const impossible of ["2026-13-01T09:00", "2026-02-30T09:00", "2026-12-01T25:00"]) {
+    const rejected = await postJson("/api/events", eventPayload({ startDate: impossible }));
+    equal(`POST with the impossible date ${impossible} -> 422`, rejected.status, 422);
+  }
+
+  // The public catalog must not honour a status that would widen it.
   const badDates = await postJson(
     "/api/events",
     eventPayload({ startDate: "2026-12-02T09:00", endDate: "2026-12-01T09:00" }),
@@ -457,9 +569,6 @@ async function main() {
 
   const uploaded = await postImage(eventId, PNG_BYTES, "cover.png", "image/png");
   const coverUrl = uploaded.body?.data?.imageUrl;
-  if (typeof coverUrl === "string" && coverUrl.startsWith("/uploads/")) {
-    createdUploads.add(join(UPLOAD_DIR, basename(coverUrl)));
-  }
   equal("POST /api/events/:id/image with a valid PNG -> 200", uploaded.status, 200);
   check(
     "...stores a generated /uploads/ path",
@@ -488,6 +597,25 @@ async function main() {
 
   const wrongType = await postImage(eventId, PNG_BYTES, "payload.svg", "image/svg+xml");
   equal("POST with a disallowed MIME type -> 422", wrongType.status, 422);
+
+  // The container alone is not proof of the format: a WAV file starts with
+  // "RIFF" just like a WebP does, and plenty of ISO-BMFF files are not AVIF.
+  equal(
+    "POST a WAV file declared as image/webp -> 422",
+    (await postImage(eventId, WAV_AS_WEBP, "clip.webp", "image/webp")).status,
+    422,
+  );
+  equal(
+    "POST a QuickTime file declared as image/avif -> 422",
+    (await postImage(eventId, QUICKTIME_AS_AVIF, "clip.avif", "image/avif")).status,
+    422,
+  );
+
+  // ...and the stricter check must not start rejecting genuine images.
+  const realWebp = await postImage(eventId, REAL_WEBP, "photo.webp", "image/webp");
+  equal("POST a real WebP -> 200", realWebp.status, 200);
+  const realAvif = await postImage(eventId, REAL_AVIF, "photo.avif", "image/avif");
+  equal("POST a real AVIF -> 200", realAvif.status, 200);
 
   const tooBig = await postImage(eventId, Buffer.alloc(6 * 1024 * 1024), "big.png", "image/png");
   check("POST with a 6 MB image is rejected", tooBig.status === 413 || tooBig.status === 422, `got ${tooBig.status}`);

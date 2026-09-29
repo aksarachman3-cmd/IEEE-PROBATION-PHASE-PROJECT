@@ -34,24 +34,65 @@ import { AppError, validationError } from "@/lib/errors";
 const UPLOAD_DIR = resolve(process.env.UPLOAD_DIR ?? "./public/uploads");
 
 /**
- * Leading byte signatures, per accepted type.
+ * Magic-byte matchers, per accepted type.
  *
- * Only the prefix that uniquely identifies the format is listed. All three
- * formats are validated with this single check rather than pulling in a
- * dependency for a few bytes of comparison.
+ * Each one inspects the bytes that actually identify the format, rather than
+ * sharing a single prefix check, because a prefix on its own identifies very
+ * little:
+ *
+ *  - `RIFF` at offset 0 also begins every WAV and AVI file, so WebP is only
+ *    accepted once `WEBP` is found after the chunk size at offset 8.
+ *  - AVIF is an ISO-BMFF file, so the `ftyp` box must be present and the file
+ *    must declare an AVIF brand — as the major brand or among the compatible
+ *    brands, which is how a file branded `mif1` is still recognised as AVIF.
  */
-const SIGNATURES: { mime: string; bytes: number[] }[] = [
-  // PNG: \x89 P N G \x0D \x0A \x1A \x0A
-  { mime: "image/png", bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
-  // JPEG: \xFF \xD8 \xFF
-  { mime: "image/jpeg", bytes: [0xff, 0xd8, 0xff] },
-  // WebP: "RIFF" .... "WEBP"
-  { mime: "image/webp", bytes: [0x52, 0x49, 0x46, 0x46] },
-  // AVIF: .... "ftyp" then a brand such as "avif"/"avis".
-  { mime: "image/avif", bytes: [0x00, 0x00, 0x00, 0x20] },
-];
+const ascii = (buffer: Buffer, offset: number, text: string): boolean =>
+  buffer.toString("latin1", offset, offset + text.length) === text;
 
-const AVIF_BRANDS = new Set([0x61, 0x76, 0x69, 0x66, 0x61, 0x76, 0x69, 0x73]); // "avif"/"avis"
+/** Brands that identify a file as AVIF. `av01` is the AV1 codec brand. */
+const AVIF_BRANDS = ["avif", "avis", "av01"];
+
+function isPng(buffer: Buffer): boolean {
+  const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  return (
+    buffer.length >= PNG_SIGNATURE.length && PNG_SIGNATURE.every((byte, i) => buffer[i] === byte)
+  );
+}
+
+function isJpeg(buffer: Buffer): boolean {
+  // SOI immediately followed by the start of a marker: FF D8 FF.
+  return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+}
+
+function isWebp(buffer: Buffer): boolean {
+  // "RIFF" <u32le size> "WEBP" <chunk> — the size covers everything after the
+  // 8-byte RIFF header, so it must fit inside what we actually received.
+  if (buffer.length < 16) return false;
+  if (!ascii(buffer, 0, "RIFF") || !ascii(buffer, 8, "WEBP")) return false;
+  return buffer.readUInt32LE(4) + 8 <= buffer.length;
+}
+
+function isAvif(buffer: Buffer): boolean {
+  if (buffer.length < 16 || !ascii(buffer, 4, "ftyp")) return false;
+
+  // A box size of 0 means "extends to end of file". Anything else must at
+  // least cover the header and the major brand, and must not run past the end.
+  const boxSize = buffer.readUInt32BE(0);
+  if (boxSize !== 0 && (boxSize < 16 || boxSize > buffer.length)) return false;
+
+  const brands = buffer.toString("latin1", 8, boxSize === 0 ? buffer.length : boxSize);
+  return AVIF_BRANDS.some((brand) => brands.includes(brand));
+}
+
+const MATCHERS: Record<string, (buffer: Buffer) => boolean> = Object.assign(
+  Object.create(null) as Record<string, (buffer: Buffer) => boolean>,
+  {
+    "image/png": isPng,
+    "image/jpeg": isJpeg,
+    "image/webp": isWebp,
+    "image/avif": isAvif,
+  },
+);
 
 export interface StoredImage {
   /** Public URL path, e.g. `/uploads/ab12cd34ef56.png`. */
@@ -60,19 +101,10 @@ export interface StoredImage {
   filename: string;
 }
 
-/** True when `buffer` starts with the signature for its declared type. */
+/** True when `buffer` is recognisable as the image type it claims to be. */
 function matchesSignature(buffer: Buffer, mime: string): boolean {
-  if (mime === "image/avif") {
-    // `ftyp` sits at offset 4 for the normal box layout.
-    if (buffer.length < 12) return false;
-    if (buffer.toString("latin1", 4, 8) !== "ftyp") return false;
-    return AVIF_BRANDS.has(buffer.readUInt8(8)) && AVIF_BRANDS.has(buffer.readUInt8(9));
-  }
-
-  const signature = SIGNATURES.find((entry) => entry.mime === mime);
-  if (!signature || buffer.length < signature.bytes.length) return false;
-
-  return signature.bytes.every((byte, index) => buffer[index] === byte);
+  const matcher = MATCHERS[mime];
+  return matcher ? matcher(buffer) : false;
 }
 
 /**

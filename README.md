@@ -80,7 +80,7 @@ Then sign in at <http://localhost:3000/admin/login> with the demo credentials in
 | ------- | ----- |
 | Event search | Matches title, summary, location, city, organiser |
 | Upcoming / past filtering | Plus `today`, `week`, `month` |
-| Pagination | 6 / 9 / 12 / 24 per page, page state lives in the URL |
+| Pagination | 6 / 9 / 12 per page, page state lives in the URL |
 | Image upload | Form + `POST /api/events/:id/image`, signature-verified |
 | Improved auth handling | Revocable sessions, constant-time login, open-redirect guard |
 | Reusable service layer | `lib/services/*` shared by Server Actions and route handlers |
@@ -279,11 +279,11 @@ npm run db:seed          # demo admin + 16 events
 ### Verifying the install
 
 ```bash
-npm run verify           # typecheck + lint + production build
+npm run verify           # typecheck + lint + production build + smoke test
 npm run smoke            # boots the server and exercises the API end to end
 ```
 
-`npm run smoke` starts the app on a scratch database, then runs 76 checks: the public
+`npm run smoke` starts the app on a scratch database, then runs 87 checks: the public
 catalog returns seeded events, filters and pagination behave, a draft is **not** publicly
 visible, unauthenticated writes are rejected with `401`, an authenticated admin can
 create → read → update → delete, and cover uploads are stored, served back, and refused
@@ -310,7 +310,7 @@ Two things worth knowing:
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm run verify` | typecheck + lint + build, in that order |
+| `npm run verify` | typecheck, lint, build, and the smoke test, in that order |
 | `npm run smoke` | End-to-end API smoke test against a scratch database |
 | `npm run setup` | generate + migrate + seed |
 | `npm run db:migrate` / `db:migrate:dev` | Apply / create migrations |
@@ -330,7 +330,7 @@ Copy `.env.example` to `.env`. **No secret is committed**; `.env` is git-ignored
 | `DATABASE_URL` | yes | `file:./prisma/dev.db` | SQLite connection string. Resolved from the project root. |
 | `SESSION_SECRET` | **in production** | dev fallback | HMAC key for session-token hashing. **≥ 16 characters.** |
 | `UPLOAD_DIR` | no | `./public/uploads` | Where cover images are written. |
-| `NEXT_PUBLIC_SITE_URL` | no | — | Public base URL, used for metadata/OG tags. |
+| `NEXT_PUBLIC_SITE_URL` | no | — | Reserved for the deployed base URL. **Currently unused** — `layout.tsx` sets no `metadataBase`, so OG URLs stay relative. |
 | `API_ALLOWED_ORIGINS` | no | *(empty)* | Comma-separated CORS allow-list. Empty means `*` on the public read endpoints. |
 | `SEED_ADMIN_EMAIL` | no | `admin@ieee-itb.ac.id` | Email created by `npm run db:seed`. |
 | `SEED_ADMIN_PASSWORD` | no | `Admin#2026!` | Password created by `npm run db:seed`. |
@@ -432,12 +432,15 @@ curl -c cookies.txt -X POST http://localhost:3000/api/auth \
 curl http://localhost:3000/api/events
 
 # 3. Create an event
+# Dates are naive local time (WIB), "YYYY-MM-DDTHH:MM" — no Z, no milliseconds.
+# endDate is optional and defaults to startDate.
 curl -b cookies.txt -X POST http://localhost:3000/api/events \
   -H "Content-Type: application/json" \
   -d '{"title":"Smoke Test Event","summary":"Created via the REST API.",
        "description":"A description that is comfortably longer than the thirty character minimum.",
        "category":"WORKSHOP","format":"IN_PERSON","status":"DRAFT",
-       "startDate":"2026-12-01T09:00:00.000Z","location":"Lab Elektronika",
+       "startDate":"2026-12-01T09:00","endDate":"2026-12-01T12:00",
+       "location":"Lab Elektronika",
        "city":"Bandung","organizer":"IEEE ITB Student Branch",
        "price":0,"capacity":50,"attendees":0,"isFeatured":false}'
 
@@ -466,8 +469,10 @@ curl -b cookies.txt -X DELETE http://localhost:3000/api/events/<id>
 
 **Query parameters** for `GET /api/events`: `q`, `category`, `format`, `status`, `when`
 (`all`/`upcoming`/`past`/`today`/`week`/`month`), `price`, `sort`, `featured`, `page`,
-`perPage`. All validated by Zod; an unrecognised value degrades to the default rather
-than erroring, so a hand-typed `?page=abc` still renders.
+`perPage`. All validated by Zod, and the two behave differently on purpose: `page` and
+`perPage` fall back to their defaults so a hand-typed `?page=abc` still renders, while an
+unrecognised enum value (`?sort=sideways`) is a `400` rather than a silent reinterpretation.
+`status` only narrows the public set — `?status=DRAFT` returns an empty list, never drafts.
 
 The public read endpoints send permissive CORS headers and never allow credentials;
 the mutating verbs are excluded from `Access-Control-Allow-Methods` and require an
@@ -499,8 +504,10 @@ Listed honestly, roughly in the order I would fix them.
 5. **Revenue on the dashboard is an estimate** — `attendees × price`, summed in
    application code rather than SQL, because SQLite cannot multiply two columns in an
    aggregate. It is labelled a proxy in the UI and should not be read as accounting.
-6. **Image type checking is a signature check, not a full decode.** The first bytes are
-   verified against the declared type, which defeats a renamed `.png`, but a
+6. **Image type checking is a signature check, not a full decode.** Each format is matched
+   on the bytes that actually identify it - WebP needs `RIFF` *and* `WEBP`, AVIF needs a
+   `ftyp` box declaring an AVIF brand - so a WAV file cannot pass as an image and an
+   arbitrary ISO-BMFF file cannot pass as AVIF. It is still not a full decode: a
    deliberately crafted polyglot file would pass. Practical risk is low because uploads
    are served as static assets and never executed, and object storage with content-type
    enforcement would remove it entirely.
@@ -509,10 +516,17 @@ Listed honestly, roughly in the order I would fix them.
 8. **No automated test suite.** `npm run smoke` covers the API end to end, and
    `npm run verify` covers types, lint, and build, but there are no unit tests for the
    service or validation layer. The first thing I would add with more time.
-9. **The admin list loads all filter counts up front.** `getAdminStats()` runs ~11
+9. **`npm run smoke` runs `next dev`, so `next start` is untested for runtime uploads.**
+   A production server builds its static manifest from `public/` at boot, which is why the
+   test uses the dev server: otherwise a file uploaded *during* the run exists on disk but
+   is never served, and the upload round-trip cannot be checked at all. The trade-off is
+   that how a real production server serves a cover image uploaded after boot is **not
+   verified by anything here** — worth confirming on a real deploy, because it is the one
+   behaviour the test deliberately cannot reach.
+10. **The admin list loads all filter counts up front.** `getAdminStats()` runs ~11
    aggregate queries per request. It is instant at this data size; at a few thousand
    events the status tabs would want caching or a denormalised counter.
-10. **No CSRF token on the REST API.** Session cookies are `SameSite=Lax`, which covers
+11. **No CSRF token on the REST API.** Session cookies are `SameSite=Lax`, which covers
     the common cross-site form-POST case, and the read endpoints refuse credentials via
     CORS. A double-submit token would close the remaining gap for a browser-based
     client on another origin.
@@ -548,7 +562,7 @@ responsible for all submitted code, decisions, and explanations.**
 
 ### What was verified rather than trusted
 
-`npm run typecheck`, `npm run lint`, `npm run build`, and `npm run smoke` (76 checks) all
+`npm run typecheck`, `npm run lint`, `npm run build`, and `npm run smoke` (87 checks) all
 pass, and the setup path below was followed from a clean state.
 
 The smoke test earned its keep — it found four real bugs, each of which is now covered
@@ -568,6 +582,22 @@ by a check that fails if the bug returns:
 - **A malformed date crashed instead of validating.** Zod runs `superRefine` even after a
   field check has failed, so the transform that was supposed to yield a `Date` had not
   run, and `end.getTime()` threw a `TypeError` — turning a 422 into a 500.
+- **The MIME allow-list could be bypassed with `Content-Type: constructor`.** The
+  allow-list is a plain object, so an inherited `Object.prototype` member resolved to a
+  truthy value and skipped both the type check and the signature check. Lookups now use
+  `Object.hasOwn`.
+- **Impossible dates were silently accepted.** `Date.UTC` rolls `2026-13-01` forward to
+  January 2027 instead of failing, so a mistyped date was stored as a different day with
+  no error. The calendar parts are range-checked now, leap years included.
+- **`?status=` was ignored on the public catalog.** It is applied as an intersection with
+  the publicly visible statuses, so it can narrow the result but never widen it —
+  `?status=DRAFT` returns an empty list rather than drafts.
+- **`endDate` was required despite every caller treating it as optional**, and the
+  documented `curl` example returned 422. Dates are naive WIB (`YYYY-MM-DDTHH:MM`, no `Z`
+  or milliseconds), and `endDate` may now be omitted entirely.
+- **Image formats were matched on a prefix too weak to identify them.** WebP now needs
+  `WEBP` after `RIFF`, so a WAV file no longer passes as an image, and AVIF needs a `ftyp`
+  box declaring an AVIF brand, so an arbitrary ISO-BMFF file no longer passes as AVIF.
 
 ### What a reviewer should check first
 

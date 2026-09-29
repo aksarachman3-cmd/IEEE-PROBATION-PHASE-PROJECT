@@ -29,8 +29,14 @@ export const IMAGE_ACCEPT_ATTRIBUTE = ACCEPTED_IMAGE_TYPES.join(",");
 /**
  * File extension for a MIME type, or `undefined` when the type is not allowed.
  * The allow-list is the map's own keys, so the two cannot drift.
+ *
+ * `Object.hasOwn` rather than a plain index: a bare `map[type]` also resolves
+ * inherited `Object.prototype` members, so a client sending
+ * `Content-Type: constructor` would get a truthy value and slip past the
+ * allow-list entirely.
  */
 export function imageExtensionFor(type: string): string | undefined {
+  if (!Object.hasOwn(IMAGE_TYPE_EXTENSIONS, type)) return undefined;
   return (IMAGE_TYPE_EXTENSIONS as Record<string, string>)[type];
 }
 

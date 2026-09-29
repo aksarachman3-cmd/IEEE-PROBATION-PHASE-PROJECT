@@ -125,7 +125,13 @@ function buildWhere(
   const clauses: Prisma.EventWhereInput[] = [];
 
   if (scope === "public") {
-    clauses.push({ status: { in: PUBLIC_STATUSES } });
+    // A public `?status=` narrows the visible set; it can never widen it. The
+    // intersection matters: accepting `?status=DRAFT` and returning nothing is
+    // correct, but applying the filter on its own would leak drafts.
+    const visible = query.status
+      ? PUBLIC_STATUSES.filter((status) => status === query.status)
+      : PUBLIC_STATUSES;
+    clauses.push({ status: { in: visible } });
   } else if (!options.ignoreFacets && query.status) {
     clauses.push({ status: query.status });
   }

@@ -39,18 +39,29 @@ export function naiveToDate(value: string): Date | null {
   if (!match) return null;
 
   const [, year, month, day, hour, minute, second] = match;
+  const y = Number(year);
+  const mo = Number(month);
+  const d = Number(day);
+  const h = Number(hour);
+  const mi = Number(minute);
+
+  // `Date.UTC` rolls overflow forward instead of failing, so "2026-13-45"
+  // would silently become a valid January 2027 date. Range-check the parts
+  // first, then confirm the constructed date really is the one asked for.
+  if (mo < 1 || mo > 12 || d < 1 || h > 23 || mi > 59) return null;
+  if (second !== undefined && Number(second) > 59) return null;
+  if (d > daysInMonth(y, mo)) return null;
+
   const date = new Date(
-    Date.UTC(
-      Number(year),
-      Number(month) - 1,
-      Number(day),
-      Number(hour),
-      Number(minute) - JAKARTA_OFFSET_MINUTES,
-      second ? Number(second) : 0,
-    ),
+    Date.UTC(y, mo - 1, d, h, mi - JAKARTA_OFFSET_MINUTES, second ? Number(second) : 0),
   );
 
   return Number.isNaN(date.getTime()) ? null : date;
+}
+
+/** Days in a 1-based month, accounting for leap years. */
+function daysInMonth(year: number, month: number): number {
+  return new Date(Date.UTC(year, month, 0)).getUTCDate();
 }
 
 /** Inverse of {@link naiveToDate} — renders a `Date` back into an input value. */
@@ -94,7 +105,11 @@ const optionalDatetimeField = (label: string) =>
       error: `${label} must be a valid date and time.`,
     })
     .transform((value) => (value === "" ? null : naiveToDate(value)))
-    .or(z.date().nullable());
+    .or(z.date().nullable())
+    // The key itself may be absent, not just blank: a JSON client that omits
+    // endDate means "single-day event", which is what `superRefine` and
+    // `toEventData` both already handle.
+    .optional();
 
 /** Numbers arrive as strings from FormData; blank is treated as "not provided". */
 function integerField(options: { min: number; max: number; label: string }) {
@@ -210,7 +225,15 @@ export const eventFormSchema = z
         message: "Only published events can be featured on the catalog.",
       });
     }
-  });
+  })
+  // `superRefine` already resolved `endDate` against `startDate`, but its
+  // in-place mutation is invisible to the type system. Restating it here gives
+  // consumers the non-optional `Date | null` that {@link EventFormValues}
+  // promises, and makes a blank end date and an absent one indistinguishable.
+  .transform((values) => ({
+    ...values,
+    endDate: values.endDate ?? values.startDate,
+  }));
 
 /** Field name → first error message, for rendering under each input. */
 export type FieldErrors = Partial<Record<keyof EventFormValues, string>>;
