@@ -55,6 +55,30 @@ const TIME_INPUT = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Jakarta",
 });
 
+/**
+ * Milliseconds since the epoch at 00:00 WIB on the day `date` falls in.
+ *
+ * WIB is a fixed UTC+7 with no daylight saving, so the offset is arithmetic
+ * rather than a zone lookup. This is deliberately *not* `setHours(0,0,0,0)`:
+ * that would use the host's timezone, and a deployment on UTC would treat
+ * 00:00–07:00 WIB as the previous day.
+ */
+export function startOfWibDay(date: Date = new Date()): number {
+  return Math.floor((date.getTime() + WIB_OFFSET_MS) / 86_400_000) * 86_400_000 - WIB_OFFSET_MS;
+}
+
+/** The last millisecond of the WIB day `date` falls in. */
+export function endOfWibDay(date: Date = new Date()): Date {
+  return new Date(startOfWibDay(date) + 86_400_000 - 1);
+}
+
+/** The `YYYY-MM-DD` day `date` falls on, in WIB. */
+export function wibDayKey(date: Date | string): string {
+  return DATE_INPUT.format(new Date(date));
+}
+
+const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
+
 /** `Rp 250.000` — pass 0 for a free event. */
 export function formatPrice(price: number): string {
   if (price <= 0) return "Free";
@@ -117,8 +141,11 @@ export function formatEventRange(start: Date | string, end: Date | string): stri
   if (sameDay) {
     return `${formatDateMedium(s)} · ${formatTime(s)} – ${formatTime(e)}`;
   }
-  if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
-    return `${s.getDate()} – ${formatDateMedium(e)}`;
+  // Compare the calendar parts as WIB sees them, not as the host does. Reading
+  // `getMonth()` locally would disagree with the WIB-rendered dates above on any
+  // deployment that is not itself in WIB.
+  if (wibDayKey(s).slice(0, 7) === wibDayKey(e).slice(0, 7)) {
+    return `${Number(wibDayKey(s).slice(8, 10))} – ${formatDateMedium(e)}`;
   }
   return `${formatDateMedium(s)} – ${formatDateMedium(e)}`;
 }
@@ -127,8 +154,9 @@ export function formatEventRange(start: Date | string, end: Date | string): stri
 export function formatRelativeDay(value: Date | string): string {
   const target = new Date(value);
   const today = new Date();
-  const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-  const days = Math.round((startOf(target) - startOf(today)) / 86_400_000);
+  // Day boundaries in WIB: a 02:00 WIB event is "today" even on a host whose
+  // local date has not rolled over yet.
+  const days = Math.round((startOfWibDay(target) - startOfWibDay(today)) / 86_400_000);
 
   if (days === 0) return "Today";
   if (days === 1) return "Tomorrow";

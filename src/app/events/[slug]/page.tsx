@@ -7,7 +7,6 @@ import { EventCover } from "@/components/ui/cover";
 import { Badge } from "@/components/ui/badge";
 import type { BadgeTone } from "@/components/ui/badge";
 import { EventCardCompact } from "@/components/public/event-card";
-import { Alert } from "@/components/ui/states";
 import {
   ArrowLeftIcon,
   CalendarIcon,
@@ -74,7 +73,9 @@ export default async function EventDetailPage({ params }: Params) {
 
   const ended = hasEnded(event.endDate);
   const soldOut = event.status === "SOLD_OUT";
-  const cancelled = event.status === "CANCELLED";
+  // `CANCELLED` is not in PUBLIC_STATUSES, so a public read can never return
+  // one and a cancellation notice here would be unreachable. An admin who
+  // cancels an event should set it to ARCHIVED, which does hide it.
   const category = CATEGORY_META[event.category as keyof typeof CATEGORY_META];
   const format = FORMAT_META[event.format as keyof typeof FORMAT_META];
   const paragraphs = toParagraphs(event.description);
@@ -92,14 +93,6 @@ export default async function EventDetailPage({ params }: Params) {
           <ArrowLeftIcon className="size-4" />
           Back to catalog
         </Link>
-
-        {cancelled && (
-          <Alert tone="danger" title="This event has been cancelled" className="mb-6">
-            {ended
-              ? "This event took place as scheduled."
-              : "This event will not go ahead. Refunds have been issued to everyone who registered."}
-          </Alert>
-        )}
 
         <article className="overflow-hidden rounded-lg border border-line bg-surface-container-lowest">
           <div className="relative aspect-[16/9] w-full sm:aspect-[21/9]">
@@ -129,7 +122,7 @@ export default async function EventDetailPage({ params }: Params) {
                 )}
                 {format && <Badge tone="neutral">{format.label}</Badge>}
                 {soldOut && <Badge tone="critical">Sold out</Badge>}
-                {ended && !cancelled && <Badge tone="neutral">Concluded</Badge>}
+                {ended && <Badge tone="neutral">Concluded</Badge>}
               </div>
 
               <h1 className="mt-3 font-display-lg leading-tight text-ink">{event.title}</h1>
@@ -206,9 +199,9 @@ export default async function EventDetailPage({ params }: Params) {
                 </dl>
 
                 <div className="border-t border-line p-5">
-                  {cancelled || ended ? (
+                  {ended ? (
                     <p className="text-center text-body-sm text-meta">
-                      {cancelled ? "This event was cancelled." : "This event has already taken place."}
+                      This event has already taken place.
                     </p>
                   ) : soldOut ? (
                     <>

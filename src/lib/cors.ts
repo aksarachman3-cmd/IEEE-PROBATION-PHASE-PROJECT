@@ -17,12 +17,22 @@ const ALLOWED_ORIGINS = (process.env.API_ALLOWED_ORIGINS ?? "")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-/** `*` when no allow-list is configured (the default for the public catalog). */
-function allowOrigin(request: Request): string {
+/**
+ * The origin to echo back, or `null` to send no `Access-Control-Allow-Origin`.
+ *
+ * With an allow-list configured, a request from an origin that is *not* on it
+ * gets no header at all. Falling back to the first allowed origin would still be
+ * blocked by the browser, but it advertises an origin the caller does not hold
+ * and makes a denial look like a success when inspecting the response.
+ *
+ * A request with no `Origin` header (same-origin, curl, server-to-server) is
+ * not a cross-origin request, so it is allowed through.
+ */
+function allowOrigin(request: Request): string | null {
   const origin = request.headers.get("origin");
   if (ALLOWED_ORIGINS.length > 0) {
-    if (origin && ALLOWED_ORIGINS.includes(origin)) return origin;
-    return ALLOWED_ORIGINS[0];
+    if (!origin) return ALLOWED_ORIGINS[0];
+    return ALLOWED_ORIGINS.includes(origin) ? origin : null;
   }
   return "*";
 }
@@ -46,7 +56,8 @@ export function withCors<Args extends unknown[]>(
 ) {
   return async (request: Request, ...args: Args): Promise<Response> => {
     const response = await handler(request, ...args);
-    response.headers.set("Access-Control-Allow-Origin", allowOrigin(request));
+    const origin = allowOrigin(request);
+    if (origin) response.headers.set("Access-Control-Allow-Origin", origin);
     for (const [key, value] of Object.entries(BASE_HEADERS)) {
       response.headers.set(key, value);
     }
@@ -56,11 +67,11 @@ export function withCors<Args extends unknown[]>(
 
 /** Standard 204 preflight response. */
 export function handleCorsPreflight(request: Request): NextResponse {
+  const origin = allowOrigin(request);
   return new NextResponse(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": allowOrigin(request),
-      ...BASE_HEADERS,
-    },
+    // A denied origin gets a bare 204 with no allow header, so the browser
+    // fails the preflight instead of proceeding and failing the real request.
+    headers: { ...(origin ? { "Access-Control-Allow-Origin": origin } : {}), ...BASE_HEADERS },
   });
 }

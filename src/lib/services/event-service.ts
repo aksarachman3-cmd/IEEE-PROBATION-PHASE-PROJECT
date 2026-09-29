@@ -4,6 +4,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { AppError, notFound } from "@/lib/errors";
 import { slugify } from "@/lib/utils";
+import { endOfWibDay, startOfWibDay } from "@/lib/format";
 import type { EventFormValues, EventQuery } from "@/lib/validation/event";
 
 /**
@@ -26,18 +27,6 @@ export type Scope = "public" | "admin";
 const PUBLIC_STATUSES: string[] = ["PUBLISHED", "SOLD_OUT"];
 
 const DAY_MS = 86_400_000;
-
-function startOfDay(date: Date): Date {
-  const copy = new Date(date);
-  copy.setHours(0, 0, 0, 0);
-  return copy;
-}
-
-function endOfDay(date: Date): Date {
-  const copy = new Date(date);
-  copy.setHours(23, 59, 59, 999);
-  return copy;
-}
 
 /* -------------------------------------------------------------------------- */
 /*  Query construction                                                        */
@@ -65,7 +54,13 @@ function timeFilter(when: EventQuery["when"], now: Date): Prisma.EventWhereInput
     case "past":
       return { endDate: { lt: now } };
     case "today": {
-      return { startDate: { lte: endOfDay(now) }, endDate: { gte: startOfDay(now) } };
+      // WIB day boundaries, not the host's: on a UTC deployment the local
+      // midnight is seven hours off, which would misclassify early-morning
+      // WIB events.
+      return {
+        startDate: { lte: endOfWibDay(now) },
+        endDate: { gte: new Date(startOfWibDay(now)) },
+      };
     }
     case "week":
       return { endDate: { gte: now }, startDate: { lte: new Date(now.getTime() + 7 * DAY_MS) } };

@@ -206,8 +206,16 @@ break links that were already shared.
 `new Date()` would silently use the *server's* timezone, so an event created on a laptop
 in Bandung could shift by a day once deployed elsewhere. The app presents all times in
 **WIB (UTC+7, no DST)**: `lib/validation/event.ts` applies the offset explicitly, and
-`lib/format.ts` formats with `timeZone: "Asia/Jakarta"`. The result is identical on every
-machine.
+`lib/format.ts` formats with `timeZone: "Asia/Jakarta"`. Because WIB has no DST, the
+offset is plain arithmetic rather than a zone lookup, and `startOfWibDay` / `endOfWibDay`
+/ `wibDayKey` are exported for the "is this today?" comparisons in `?when=today`,
+`formatRelativeDay`, and `formatEventRange`.
+
+Day boundaries are the part that is easy to get wrong. `setHours(0, 0, 0, 0)` uses the
+*host's* zone, so a deployment on UTC would have filed a 02:00 WIB event under the
+previous day — and since WIB midnight is 17:00 UTC, "today" would be wrong for seven
+hours of every day. Those helpers pin the boundary to WIB, so the result is now genuinely
+identical on every machine.
 
 ### Public vs. admin scope
 
@@ -479,6 +487,13 @@ the mutating verbs are excluded from `Access-Control-Allow-Methods` and require 
 `httpOnly` cookie, so a third-party origin cannot drive the admin API with a visitor's
 ambient session.
 
+When `API_ALLOWED_ORIGINS` is set, a request whose `Origin` is not on the list gets **no**
+`Access-Control-Allow-Origin` header at all. It previously received the first allowed
+origin instead: the browser blocked it either way, so it was not a data leak, but the
+response advertised an origin the caller did not hold, which makes a denial look like a
+success when you inspect it with curl. A request with no `Origin` header is not
+cross-origin and is still allowed through.
+
 ---
 
 ## 9. Known issues and limitations
@@ -597,7 +612,13 @@ by a check that fails if the bug returns:
   or milliseconds), and `endDate` may now be omitted entirely.
 - **Image formats were matched on a prefix too weak to identify them.** WebP now needs
   `WEBP` after `RIFF`, so a WAV file no longer passes as an image, and AVIF needs a `ftyp`
-  box declaring an AVIF brand, so an arbitrary ISO-BMFF file no longer passes as AVIF.
+  box declaring an AVIF brand, so an arbitrary   ISO-BMFF file no longer passes as AVIF.
+- **"Today" was computed in the server's timezone.** `setHours(0, 0, 0, 0)` and
+  `new Date(y, m, d)` both use the host's zone, and WIB midnight is 17:00 UTC, so a
+  deployment on UTC filed 00:00–07:00 WIB under the previous day. That made `?when=today`
+  miss early-morning events and mislabel a same-day event as "Tomorrow". Day boundaries
+  are now pinned to WIB; `formatEventRange` had the same flaw in its same-month
+  shortcut, which compared `getMonth()` locally against WIB-rendered output.
 
 ### What a reviewer should check first
 
