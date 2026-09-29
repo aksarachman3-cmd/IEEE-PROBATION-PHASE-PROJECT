@@ -1,0 +1,89 @@
+// Prisma schema for the IEEE ITB Events platform.
+//
+// Design note: the brief only requires `User/Admin` and `Event` entities.
+// `Session` is added so that authentication uses opaque, revocable server-side
+// tokens instead of stateless JWTs — sessions can be invalidated immediately
+// (e.g. on sign-out) which is easier to reason about in an interview.
+//
+// Note on SQLite: Prisma does not support native `enum` types on SQLite, so the
+// categorical fields below are stored as `String` and constrained by the
+// TypeScript unions + Zod schemas in `src/lib/constants.ts` and
+// `src/lib/validation/`. See README → "Database".
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// An administrator account. There is a single role today, but the column is
+/// kept so role-based authorisation can be added without a migration.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions Session[]
+  events   Event[]
+
+  @@map("users")
+}
+
+/// An opaque session token. The raw token lives in an httpOnly cookie; only a
+/// SHA-256 digest of it is stored here, so a database leak cannot be replayed
+/// as a valid login.
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  /// One-line pitch used on catalog cards.
+  summary     String
+  /// Long-form copy shown on the detail page.
+  description String
+  category    String
+  format      String
+  status      String   @default("DRAFT")
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+  address     String?
+  city        String
+  organizer   String
+  /// Registration fee in Indonesian Rupiah. 0 means free.
+  price       Int      @default(0)
+  capacity    Int
+  attendees   Int      @default(0)
+  imageUrl    String?
+  isFeatured  Boolean  @default(false)
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@index([status, startDate])
+  @@index([category])
+  @@index([startDate])
+  @@map("events")
+}

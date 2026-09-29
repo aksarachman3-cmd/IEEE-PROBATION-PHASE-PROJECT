@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — real secrets stay out of git, but the template is committed so
+# setup instructions are self-contained.
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +41,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated client (regenerate with `npm run db:generate`)
+/src/generated/prisma
+
+# local sqlite database (recreate with `npm run setup`)
+/prisma/*.db
+/prisma/*.db-journal
+/prisma/*.db-shm
+/prisma/*.db-wal
+
+# user-uploaded event cover images (runtime data, not source)
+# the directory itself is kept so a fresh clone has somewhere to write
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# scratch database, uploads and logs created by `npm run smoke`
+/.smoke/
+/.next-smoke/

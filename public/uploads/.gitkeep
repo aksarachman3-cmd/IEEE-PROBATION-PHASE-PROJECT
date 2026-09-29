@@ -1,0 +1,3 @@
+# Runtime directory for uploaded event cover images.
+# Kept in git (via .gitkeep) so a fresh clone can accept uploads immediately;
+# the files themselves are ignored because they are user data, not source.
