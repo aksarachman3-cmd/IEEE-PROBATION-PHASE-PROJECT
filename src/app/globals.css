@@ -1,26 +1,237 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   IEEE ITB Events — Design Tokens
+   Derived from the Google Stitch "Event Ops Console" design system
+   (see /design-reference). The original token names are preserved so the
+   markup maps 1:1 onto the approved mockups.
+   ========================================================================== */
+
+@theme {
+  /* ---- Neutrals & surfaces ---- */
+  --color-surface: #f9f9f9;
+  --color-surface-dim: #dadad9;
+  --color-surface-bright: #f9f9f9;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container: #eeeeed;
+  --color-surface-container-high: #e8e8e7;
+  --color-surface-container-highest: #e2e2e2;
+  --color-surface-variant: #e2e2e2;
+  --color-on-surface: #1a1c1c;
+  --color-on-surface-variant: #554434;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f1f0;
+  --color-outline: #887361;
+  --color-outline-variant: #dbc2ad;
+  --color-background: #f9f9f9;
+  --color-on-background: #1a1c1c;
+
+  /* ---- Brand accents (amber / navy) ---- */
+  --color-primary: #8a5100;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #ff9900;
+  --color-on-primary-container: #653a00;
+  --color-inverse-primary: #ffb86f;
+  --color-secondary: #535f70;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #d4e1f5;
+  --color-on-secondary-container: #576474;
+  --color-tertiary: #595f68;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #acb2bd;
+  --color-on-tertiary-container: #3f454e;
+
+  /* ---- Fixed (always-on) tonal palettes ---- */
+  --color-primary-fixed: #ffdcbd;
+  --color-primary-fixed-dim: #ffb86f;
+  --color-on-primary-fixed: #2c1600;
+  --color-on-primary-fixed-variant: #693c00;
+  --color-secondary-fixed: #d7e3f7;
+  --color-secondary-fixed-dim: #bbc7db;
+  --color-on-secondary-fixed: #101c2b;
+  --color-on-secondary-fixed-variant: #3c4858;
+  --color-tertiary-fixed: #dde3ee;
+  --color-tertiary-fixed-dim: #c1c7d2;
+  --color-on-tertiary-fixed: #161c24;
+  --color-on-tertiary-fixed-variant: #414750;
+
+  /* ---- Error ---- */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* ---- Brand ink, borders & canvas (from the "Colors" section) ---- */
+  --color-ink: #0f1111; /* primary text */
+  --color-meta: #565959; /* secondary / meta text */
+  --color-line: #d5d9d9; /* subtle borders & dividers */
+  --color-line-strong: #888c8c; /* hover / interactive border */
+  --color-canvas: #f3f3f3; /* base page canvas */
+
+  /* ---- Semantic feedback (from the brand & style section) ---- */
+  --color-success: #067d62;
+  --color-success-container: #e7f4f0;
+  --color-critical: #ba0933;
+  --color-critical-container: #fcedef;
+  --color-warning: #b86b00;
+  --color-warning-container: #fff7e6;
+  --color-info: #007185;
+  --color-info-container: #ebf5f7;
+
+  /* ---- Type scale ---- */
+  --text-display: 2.25rem; /* 36px */
+  --text-display--line-height: 2.75rem;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 700;
+
+  --text-headline-lg: 1.75rem; /* 28px */
+  --text-headline-lg--line-height: 2.25rem;
+  --text-headline-lg--letter-spacing: -0.015em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 1.25rem; /* 20px */
+  --text-headline-md--line-height: 1.75rem;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 600;
+
+  --text-headline-sm: 1rem; /* 16px */
+  --text-headline-sm--line-height: 1.5rem;
+  --text-headline-sm--letter-spacing: -0.005em;
+  --text-headline-sm--font-weight: 600;
+
+  --text-body-lg: 1rem; /* 16px */
+  --text-body-lg--line-height: 1.5rem;
+
+  --text-body-md: 0.875rem; /* 14px */
+  --text-body-md--line-height: 1.25rem;
+
+  --text-body-sm: 0.75rem; /* 12px */
+  --text-body-sm--line-height: 1rem;
+  --text-body-sm--letter-spacing: 0.01em;
+
+  --text-label-md: 0.8125rem; /* 13px */
+  --text-label-md--line-height: 1rem;
+  --text-label-md--letter-spacing: 0.01em;
+  --text-label-md--font-weight: 600;
+
+  --text-label-sm: 0.6875rem; /* 11px */
+  --text-label-sm--line-height: 0.875rem;
+  --text-label-sm--letter-spacing: 0.04em;
+  --text-label-sm--font-weight: 700;
+
+  --text-code-sm: 0.75rem; /* 12px */
+  --text-code-sm--line-height: 1rem;
+
+  /* ---- Named spacing scale from the design system ---- */
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 0.75rem;
+  --spacing-space-lg: 1rem;
+  --spacing-space-xl: 1.5rem;
+  --spacing-gutter: 1rem;
+  --spacing-gutter-lg: 1.5rem;
+  --spacing-margin: 1rem;
+  --spacing-margin-md: 1.5rem;
+  --spacing-margin-lg: 2rem;
+
+  /* ---- Radii ---- */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* ---- Border-first elevation (the design avoids ambient shadows) ---- */
+  --shadow-raised: 0 2px 5px rgba(15, 17, 17, 0.15);
+  --shadow-popover: 0 4px 12px rgba(15, 17, 17, 0.15);
+  --shadow-modal: 0 8px 24px rgba(15, 17, 17, 0.2);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-surface-container-highest);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Inputs default to the design's 13px label size and inherit the UI font. */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Consistent, high-contrast focus ring across the whole app. */
+  :focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-container);
+    color: var(--color-on-primary-container);
+  }
+
+  /* Tabular figures for metric-dense tables and stat cards. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ==========================================================================
+   Small reusable primitives
+   ========================================================================== */
+
+@layer components {
+  /* Horizontal scroller for the sticky filter bar on narrow viewports. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Loading shimmer (used by the skeleton state components)
+   ========================================================================== */
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
