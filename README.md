@@ -1,4 +1,4 @@
-# IEEE ITB Events
+# IEEE-PROBATION-PHASE-PROJECT
 
 **A full-stack event platform for the IEEE ITB Student Branch.** A public storefront
 where anyone can browse and discover events, plus a password-protected admin console
@@ -8,7 +8,7 @@ required.
 Built with **Next.js**, **Prisma**, and **SQLite**, end to end in TypeScript.
 
 The catalog looks like a shop you already trust. That's not an accident — see
-[the design story](#-the-design-story).
+[the design story](#the-design-story).
 
 ---
 
