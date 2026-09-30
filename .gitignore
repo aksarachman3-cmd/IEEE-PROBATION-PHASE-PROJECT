@@ -30,6 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# dev-server logs from running `npm run dev` with output redirected
+dev.err
+dev.log
+
 # env files — real secrets stay out of git, but the template is committed so
 # setup instructions are self-contained.
 .env*

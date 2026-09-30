@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>EventPrime</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#ffffff","tertiary-fixed-dim":"#c1c7d2","on-secondary-fixed":"#101c2b","error-container":"#ffdad6","outline-variant":"#dbc2ad","on-secondary-fixed-variant":"#3c4858","on-primary-fixed":"#2c1600","surface-variant":"#e2e2e2","tertiary":"#595f68","on-tertiary-fixed-variant":"#414750","surface-container":"#eeeeed","on-error":"#ffffff","surface":"#f9f9f9","error":"#ba1a1a","on-secondary-container":"#576474","secondary-fixed":"#d7e3f7","primary-fixed-dim":"#ffb86f","on-error-container":"#93000a","surface-container-high":"#e8e8e7","on-surface":"#1a1c1c","on-tertiary-container":"#3f454e","secondary-fixed-dim":"#bbc7db","tertiary-container":"#acb2bd","surface-container-highest":"#e2e2e2","surface-container-lowest":"#ffffff","inverse-on-surface":"#f1f1f0","inverse-primary":"#ffb86f","surface-container-low":"#f4f3f3","on-surface-variant":"#554434","secondary-container":"#d4e1f5","secondary":"#535f70","on-background":"#1a1c1c","primary":"#8a5100","surface-dim":"#dadad9","primary-fixed":"#ffdcbd","primary-container":"#ff9900","on-primary":"#ffffff","background":"#f9f9f9","inverse-surface":"#2f3131","on-primary-container":"#653a00","outline":"#887361","on-primary-fixed-variant":"#693c00","on-tertiary":"#ffffff","on-tertiary-fixed":"#161c24","tertiary-fixed":"#dde3ee","surface-bright":"#f9f9f9","surface-tint":"#8a5100"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"margin-lg":"2rem",margin:"1rem","space-sm":"0.5rem","space-xs":"0.25rem","gutter-lg":"1.5rem","margin-md":"1.5rem",gutter:"1rem","space-xl":"1.5rem","space-md":"0.75rem","space-lg":"1rem"},fontFamily:{"headline-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"code-sm":["JetBrains Mono"],"headline-md":["Inter"],display:["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Inter"],"label-sm":["Inter"],"body-lg":["Inter"]},fontSize:{"headline-sm":["16px",{lineHeight:"24px",letterSpacing:"-0.005em",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px",letterSpacing:"0",fontWeight:"400"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.015em",fontWeight:"700"}],"label-md":["13px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"600"}],"code-sm":["12px",{lineHeight:"16px",letterSpacing:"0",fontWeight:"500"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],display:["36px",{lineHeight:"44px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",letterSpacing:"0",fontWeight:"400"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 shadow-sm"><div class="h-24"><div class="h-14 bg-on-secondary-fixed flex items-center px-margin-lg gap-gutter"><div class="flex items-center gap-space-md shrink-0"><img alt="EventPrime Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VK5LLIxqfzwlGJZddAe4uDcTujcn6mwbAzPfYzMQdm_3NmnFE-rDJvbW9vh2s-gvbUVnrvlMtkMAXmyhKTeGOIARb0E-PiX_PLRoeMAUPAnDqk5ZW_UMqm0jd-Nf_D6mu1x4W-7DaFKuwll8HNYDVwldKfDRYFsv4FGM4GrTm0M8M2yJSioyY2dYjaKAIoUxKdT7sI42H2y1kh6Y2dpHLzMz-KesN2TjvgkweMsb_JQyahh00KTFBEI9A"/><span class="text-surface-container-lowest font-headline-md tracking-tight">EventPrime</span></div><div class="flex items-center gap-space-xs text-surface-container-lowest shrink-0 cursor-pointer hover:text-primary-container"><span class="material-symbols-outlined text-secondary-fixed text-lg">location_on</span><div class="flex flex-col"><span class="text-surface-container-highest font-label-sm leading-none">Deliver to</span><span class="font-label-md leading-tight">Seattle, WA</span></div></div><div class="flex-1 max-w-3xl flex items-center h-10 rounded bg-surface-container-lowest overflow-hidden"><select class="h-full bg-surface-container text-on-surface font-label-md px-space-sm outline-none cursor-pointer border-r border-surface-container-high"><option>All Categories</option><option>Conferences</option><option>Workshops</option><option>Tech &amp; AI</option><option>Music</option><option>Corporate</option></select><input class="flex-1 h-full px-space-md text-on-surface font-body-md outline-none bg-transparent" placeholder="Search millions of live events, summits, workshops..." type="text"/><button class="h-full px-space-lg bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined">search</span></button></div><div class="flex items-center gap-gutter ml-auto shrink-0"><a class="flex items-center gap-space-xs text-surface-container-lowest hover:text-primary-container" data-path="my-tickets" href="#"><span class="material-symbols-outlined text-primary-container">confirmation_number</span><div class="flex flex-col"><span class="text-surface-container-highest font-label-sm leading-none">My Tickets</span><span class="font-label-md leading-tight">(2) Confirmed</span></div></a><a class="px-space-md py-1.5 rounded-lg border border-surface-variant text-surface-container-lowest hover:bg-surface-variant hover:text-on-surface font-label-md transition-colors" data-path="host-event" href="#">Host an Event</a><a class="flex items-center gap-space-xs text-surface-container-lowest hover:text-primary-container font-label-md" data-path="admin-login" href="#"><span class="material-symbols-outlined text-sm">admin_panel_settings</span>Admin Portal Sign In</a></div></div><div class="h-10 bg-on-secondary-fixed-variant flex items-center px-margin-lg text-surface-container-lowest"><nav class="flex items-center gap-gutter text-surface-container-lowest" data-active-classes="bg-surface-container-lowest text-on-secondary-fixed font-label-md rounded px-space-sm py-1"><a class="text-surface-container-lowest hover:text-primary-container font-label-md py-1 transition-colors" data-path="all-events" href="#">All Events</a><a aria-current="page" class="transition-colors bg-surface-container-lowest text-on-secondary-fixed font-label-md rounded px-space-sm py-1" data-path="conferences" href="#">Conferences</a><a class="text-surface-container-lowest hover:text-primary-container font-label-md py-1 transition-colors" data-path="workshops" href="#">Workshops</a><a class="text-surface-container-lowest hover:text-primary-container font-label-md py-1 transition-colors" data-path="community" href="#">Community</a><a class="text-surface-container-lowest hover:text-primary-container font-label-md py-1 transition-colors" data-path="deals-and-early-birds" href="#">Deals &amp; Early Birds</a></nav></div></div></header><main class="w-full pt-24 bg-surface min-h-[calc(100vh-280px)]"><div class="flex flex-col w-full">
+<!-- Sub-header Breadcrumb Bar -->
+<section class="w-full bg-surface-container-low px-margin-lg py-space-sm shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between text-body-sm text-tertiary">
+<nav class="flex items-center gap-space-xs font-body-sm flex-wrap">
+<a class="hover:text-primary transition-colors text-on-surface" href="#">Home</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors text-on-surface" href="#">Conferences</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors text-on-surface" href="#">Tech &amp; AI</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-md text-on-surface font-semibold truncate max-w-xs md:max-w-md">AWS &amp; AI Infrastructure Summit 2025</span>
+</nav>
+<div class="hidden sm:flex items-center gap-space-md text-code-sm text-tertiary font-code-sm">
+<span class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary-container inline-block animate-pulse"></span>REGISTRATION OPEN</span>
+<span class="text-surface-variant">|</span>
+<span>EVENT ID: #EP-99420-SEA</span>
+</div>
+</div>
+</section>
+<!-- Main Content Stage -->
+<div class="max-w-7xl mx-auto px-margin-lg py-margin-md w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-start">
+<!-- Left Column (70% on desktop: 8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-margin-md min-w-0">
+<!-- Header Banner & Hero Card -->
+<div class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between gap-space-sm flex-wrap">
+<div class="flex items-center gap-space-xs bg-secondary-container text-on-secondary-container px-space-sm py-1 rounded-full text-label-sm font-label-md uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+              Premier Enterprise Summit
+            </div>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="p-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors flex items-center gap-1 text-label-md font-label-md" title="Share event" type="button">
+<span class="material-symbols-outlined text-base">share</span>
+<span class="hidden sm:inline">Share</span>
+</button>
+<button class="p-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors flex items-center gap-1 text-label-md font-label-md" title="Bookmark event" type="button">
+<span class="material-symbols-outlined text-base">bookmark_border</span>
+<span class="hidden sm:inline">Save</span>
+</button>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">AWS &amp; AI Infrastructure Summit 2025</h1>
+<!-- Host & Rating Metadata -->
+<div class="flex flex-wrap items-center gap-y-2 gap-x-margin text-body-sm text-tertiary">
+<div class="flex items-center gap-space-xs">
+<span class="text-tertiary font-body-sm">Hosted by</span>
+<span class="font-label-md text-on-surface font-semibold">EventPrime Enterprise Ops &amp; Cloud Group</span>
+<span class="material-symbols-outlined text-primary-container text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-1">
+<div class="flex text-primary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="font-label-md text-on-surface font-bold">4.9</span>
+<a class="text-primary hover:underline font-body-sm" href="#reviews">(842 verified attendees)</a>
+</div>
+</div>
+<!-- Event Meta Band Bar -->
+<div class="bg-surface-container-low rounded-lg p-space-md grid grid-cols-1 md:grid-cols-2 gap-space-md mt-space-xs">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 bg-surface-container-lowest rounded text-primary shrink-0">
+<span class="material-symbols-outlined text-xl">calendar_month</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-tertiary uppercase">Date &amp; Time</span>
+<span class="font-label-md text-on-surface">October 24–26, 2025</span>
+<span class="text-body-sm text-tertiary">09:00 AM - 06:00 PM PDT (3 Full Days)</span>
+<a class="text-primary text-label-md font-label-md hover:underline flex items-center gap-1 mt-1" href="#">
+<span class="material-symbols-outlined text-sm">event</span>
+                  Add to Google / Apple Calendar
+                </a>
+</div>
+</div>
+<div class="flex items-start gap-space-sm">
+<div class="p-2 bg-surface-container-lowest rounded text-primary shrink-0">
+<span class="material-symbols-outlined text-xl">pin_drop</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-tertiary uppercase">Location &amp; Transit</span>
+<span class="font-label-md text-on-surface">Seattle Convention Center - Arch Building</span>
+<span class="text-body-sm text-tertiary">705 Pike St, Seattle, WA 98101</span>
+<a class="text-primary text-label-md font-label-md hover:underline flex items-center gap-1 mt-1" href="#venue-map">
+<span class="material-symbols-outlined text-sm">navigation</span>
+                  View Transit, Hall Access &amp; Parking
+                </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Navigation Tabs -->
+<div class="sticky top-24 z-30 bg-surface-container-lowest shadow-sm rounded-lg overflow-x-auto">
+<nav class="flex items-center min-w-max px-space-sm" id="section-tabs">
+<a class="tab-link px-space-md py-space-md font-label-md text-on-surface text-primary border-b-2 border-primary-container font-semibold transition-colors" href="#overview">Overview</a>
+<a class="tab-link px-space-md py-space-md font-label-md text-tertiary hover:text-on-surface transition-colors" href="#tracks">Core Tracks</a>
+<a class="tab-link px-space-md py-space-md font-label-md text-tertiary hover:text-on-surface transition-colors" href="#agenda">Schedule Breakdown</a>
+<a class="tab-link px-space-md py-space-md font-label-md text-tertiary hover:text-on-surface transition-colors flex items-center gap-1" href="#speakers">
+              Keynotes
+              <span class="px-1.5 py-0.2 bg-surface-container-high rounded text-label-sm font-code-sm">12</span>
+</a>
+<a class="tab-link px-space-md py-space-md font-label-md text-tertiary hover:text-on-surface transition-colors" href="#venue-map">Venue &amp; Lodging</a>
+<a class="tab-link px-space-md py-space-md font-label-md text-tertiary hover:text-on-surface transition-colors" href="#faqs">Policy &amp; FAQ</a>
+</nav>
+</div>
+<!-- Comprehensive Overview Section -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-lg" id="overview">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-space-xs">About The 2025 Summit</h2>
+<div class="w-12 h-1 bg-primary-container rounded"></div>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            The AWS &amp; AI Infrastructure Summit brings together over 4,500 enterprise architects, machine learning engineers, and cloud infrastructure decision-makers for three days of rigorous, production-grade technical sessions. From LLM serving at petabyte-scale to cluster topology optimization on AWS Trainium &amp; Inferentia, this conference bypasses surface-level hype to focus entirely on reliable distributed execution.
+          </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">4,500+</span>
+<span class="font-label-md text-on-surface font-semibold">Senior Delegates</span>
+<span class="text-body-sm text-tertiary">Directors, Principal SREs, ML Ops Leads from 65+ countries.</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">78</span>
+<span class="font-label-md text-on-surface font-semibold">Technical Deep Dives</span>
+<span class="text-body-sm text-tertiary">Peer-reviewed architectures, zero sales pitches.</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">1:1</span>
+<span class="font-label-md text-on-surface font-semibold">Architect Bars</span>
+<span class="text-body-sm text-tertiary">Direct whiteboarding sessions with AWS Core kernel engineers.</span>
+</div>
+</div>
+</section>
+<!-- Core Tracks Section -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-lg" id="tracks">
+<div>
+<div class="text-label-sm font-label-md text-primary uppercase tracking-wider mb-1">Deep-Dive Curricula</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Curated Conference Tracks</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Track 1 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between">
+<div class="flex flex-col gap-space-xs">
+<div class="w-10 h-10 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-space-xs">
+<span class="material-symbols-outlined">neurology</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Generative AI at Scale</h3>
+<p class="font-body-sm text-body-sm text-tertiary leading-normal">
+                  Low-latency model inference, vLLM optimizations, distributed TensorRT topologies, and KV-cache sharding strategies on custom silicon.
+                </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-label-sm font-code-sm text-primary">
+<span class="material-symbols-outlined text-sm">layers</span> 26 Sessions
+              </div>
+</div>
+<!-- Track 2 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between">
+<div class="flex flex-col gap-space-xs">
+<div class="w-10 h-10 rounded bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed mb-space-xs">
+<span class="material-symbols-outlined">dns</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Multi-Cloud Reliability</h3>
+<p class="font-body-sm text-body-sm text-tertiary leading-normal">
+                  Cross-region active-active resiliency, automated chaos engineering on EKS, resilient control planes, and cell-based architectures.
+                </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-label-sm font-code-sm text-primary">
+<span class="material-symbols-outlined text-sm">hub</span> 24 Sessions
+              </div>
+</div>
+<!-- Track 3 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between">
+<div class="flex flex-col gap-space-xs">
+<div class="w-10 h-10 rounded bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed mb-space-xs">
+<span class="material-symbols-outlined">database</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Distributed Data Systems</h3>
+<p class="font-body-sm text-body-sm text-tertiary leading-normal">
+                  Real-time vector indexing, Apache Iceberg analytics data lakes, serverless streaming pipelines, and high-throughput S3 ingress mechanics.
+                </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-label-sm font-code-sm text-primary">
+<span class="material-symbols-outlined text-sm">sync_alt</span> 28 Sessions
+              </div>
+</div>
+</div>
+</section>
+<!-- Interactive Agenda Breakdown -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-lg" id="agenda">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<div class="text-label-sm font-label-md text-primary uppercase tracking-wider mb-1">Interactive Schedule</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">3-Day Technical Itinerary</h2>
+</div>
+<div class="inline-flex rounded-lg bg-surface-container p-1 gap-1" id="agenda-day-switcher">
+<button class="px-space-md py-1.5 rounded font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-sm" onclick="switchDay(1)">Day 1: Oct 24</button>
+<button class="px-space-md py-1.5 rounded font-label-md text-label-md text-tertiary hover:text-on-surface" onclick="switchDay(2)">Day 2: Oct 25</button>
+<button class="px-space-md py-1.5 rounded font-label-md text-label-md text-tertiary hover:text-on-surface" onclick="switchDay(3)">Day 3: Oct 26</button>
+</div>
+</div>
+<!-- Day 1 Schedule Content -->
+<div class="flex flex-col gap-space-md" id="day-content">
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">
+                  09:00 - 10:30 AM
+                </div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-primary-fixed text-on-primary-fixed">GENERAL KEYNOTE</span>
+<span class="text-body-sm text-tertiary">Main Hall Arch-1</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Opening Keynote: Next-Gen Compute Fabrics for 100B+ Parameter Workloads</h4>
+<p class="font-body-sm text-body-sm text-tertiary">Dr. Elena Rostova explores hardware co-design, photonic interconnects, and dynamic memory orchestration in frontier data centers.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-md text-secondary shrink-0">Livestream Available</span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">
+                  11:00 - 12:30 PM
+                </div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-secondary-fixed text-on-secondary-fixed">DEEP BREAKOUT LAB</span>
+<span class="text-body-sm text-tertiary">Lab Level 3B</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Zero-Downtime Migration of 15PB Postgres Instances to Aurora Serverless</h4>
+<p class="font-body-sm text-body-sm text-tertiary">Step-by-step post-mortem and terraform code walkthrough by FinTech Cloud Lead Marcus Vance.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-md text-error shrink-0">Hands-on (BYOD)</span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">
+                  02:00 - 03:45 PM
+                </div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-tertiary-fixed text-on-tertiary-fixed">PANEL DISCUSSION</span>
+<span class="text-body-sm text-tertiary">Amphitheater A</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">GPU Scarcity: Intelligent Scheduling and Spot-Instance Orchestration at Scale</h4>
+<p class="font-body-sm text-body-sm text-tertiary">Panelists from Anthropic, AWS, and Databricks debate preemptible cluster failovers.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-md text-secondary shrink-0">Q&amp;A Enabled</span>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-space-md">
+<div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">
+                  05:00 - 07:00 PM
+                </div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-primary-container text-on-primary-container">NETWORKING &amp; DRINKS</span>
+<span class="text-body-sm text-tertiary">Skybridge Terrace</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Opening Reception &amp; Enterprise Ecosystem Mixer</h4>
+<p class="font-body-sm text-body-sm text-tertiary">Craft appetizers, local Pacific Northwest microbrews, and designated track networking pods.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-md text-secondary shrink-0">All Passes</span>
+</div>
+</div>
+</section>
+<!-- Featured Keynote Speakers Grid -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-lg" id="speakers">
+<div class="flex items-center justify-between">
+<div>
+<div class="text-label-sm font-label-md text-primary uppercase tracking-wider mb-1">Industry Leaders</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Featured Keynote Speakers</h2>
+</div>
+<a class="text-primary font-label-md hover:underline flex items-center gap-1" href="#">
+              View all 12 speakers <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+<!-- Speaker 1 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-sm group hover:shadow-md transition-shadow">
+<div class="relative overflow-hidden rounded-lg aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Professional studio portrait of Dr. Elena Rostova, female tech executive in mid-40s with sharp tailored dark blazer, soft natural conference lighting, crisp corporate tech summit background, high quality photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf4KPPKgjzMaaecBZOYrK5uRnVGSNGARBH6sjlluBm90fC2kX8-bpy_La7lqBRconl1TDroW7DLAhlHwQVRH5y6K_cowHHyBWhsZFxg6o1yr3Qz62YFy3odrBkySV2wuISOzRwzncMWdXj7sQRrvGS3CBe0zr_48HBypiEmWBbzQ7ec3R3FW6WUOdztSxp83yjvjui8boNivdCMVjTeyqRwWC2mi3D-QBgFUku8jMT9ZJ2ahoAU1ilKg"/>
+<div class="absolute bottom-2 left-2 bg-on-secondary-fixed/80 backdrop-blur-sm text-surface-container-lowest px-2 py-0.5 rounded text-label-sm font-code-sm">
+                  KEYNOTE 01
+                </div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Dr. Elena Rostova</h4>
+<span class="font-label-md text-primary font-semibold">VP of Cloud AI Systems</span>
+<span class="text-body-sm text-tertiary">HyperScale AWS Research</span>
+<p class="text-body-sm text-on-surface-variant mt-2 line-clamp-2">Leading next-generation photonic interconnect topologies and distributed accelerator scheduling.</p>
+</div>
+</div>
+<!-- Speaker 2 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-sm group hover:shadow-md transition-shadow">
+<div class="relative overflow-hidden rounded-lg aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Modern corporate portrait of Marcus Vance, African American male principal architect, wearing glasses and a minimalist charcoal sweater, warm studio lighting, professional enterprise look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8UE1ErnCZOWKNkvhzDsvTAuHRu9SJcEGJTpFqcSjdLC1xjZYXrsQwrQnkn4ZNWYN6mFtsOpvxvrfZf4mOqok20tQD6zia7QnJH4GwEEZ5LpTlp5i2UjyuhRvEROytK2nASiqOJ9tiXcDG1C7yc2VAll1LrBNhm33rihm6ndMJ7ipurwLrr5isaIKJtyG6ewll3ZSXxe7ayhds_SVb-LWikRDWNeN5MCrqMKxIE0y0AkydidA_ALMqFA"/>
+<div class="absolute bottom-2 left-2 bg-on-secondary-fixed/80 backdrop-blur-sm text-surface-container-lowest px-2 py-0.5 rounded text-label-sm font-code-sm">
+                  KEYNOTE 02
+                </div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Marcus Vance</h4>
+<span class="font-label-md text-primary font-semibold">Principal Infrastructure Architect</span>
+<span class="text-body-sm text-tertiary">Apex Global Financial</span>
+<p class="text-body-sm text-on-surface-variant mt-2 line-clamp-2">Pioneered zero-downtime stateful database failover protocols across continental availability zones.</p>
+</div>
+</div>
+<!-- Speaker 3 -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-sm group hover:shadow-md transition-shadow">
+<div class="relative overflow-hidden rounded-lg aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Confident portrait of Priya Nair, female engineering director in her 30s, candid smart-casual tech conference attire, Seattle skyline backdrop in soft focus, professional executive headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwWxI_TFtdowSElFXkWTJlr7zlUN4gGg7Wuxm8oUECRR_Yo2Ktx7FeV_SaAQDbiXJ3XoExGi-ZIomDukPMAF55VglBvBZelqswrYyG-tPIDsXyFoSZytej2RTCcpgqDJtbgaUe5phkBskXm6i0s5PcjJLjqgSPnvMeTi5epfNvl1knExQTp3rwdQv_rkPg3a6RwFXLR-wXH7wT4QdCUL5SZjVR1Fc9NzPr308_DInGcFLgXXa0WESc-Q"/>
+<div class="absolute bottom-2 left-2 bg-on-secondary-fixed/80 backdrop-blur-sm text-surface-container-lowest px-2 py-0.5 rounded text-label-sm font-code-sm">
+                  KEYNOTE 03
+                </div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Priya Nair</h4>
+<span class="font-label-md text-primary font-semibold">Head of Distributed Inference</span>
+<span class="text-body-sm text-tertiary">VectorScale Labs</span>
+<p class="text-body-sm text-on-surface-variant mt-2 line-clamp-2">Specializing in real-time billion-node vector quantization and high-concurrency neural search.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Venue & Travel Section -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-lg" id="venue-map">
+<div>
+<div class="text-label-sm font-label-md text-primary uppercase tracking-wider mb-1">Destination &amp; Logistics</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Seattle Convention Center (Arch Building)</h2>
+</div>
+<!-- Venue Map Container -->
+<div class="w-full h-72 rounded-xl bg-surface-container flex items-center justify-center relative overflow-hidden shadow-inner" data-location="Seattle Convention Center Arch Building, Seattle, WA" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhyx9tZxEcngRyWGhnYHaOvEaY6CqLt0Lc_ccrX7i4YLAeSnbWSO9XE-aYumwCZnJ5EQnoETZW0-8P9hXc7mSFo9G77e4kuapEzqRkyKfUXyiskKhrI5QPRviK4b41P4aRhLgZqk0yBRspC9QdoGnyjHtioy2EZnDP6MucBSqmnIQ_C1sLFEUCjJLqdeFdMt5-1Z1Np9y-50p1Of4kKLc4MpDoJfpvS6-_09cHorvG3SFHyKYD_Nw4Uw')">
+<div class="absolute inset-0 bg-on-secondary-fixed/20"></div>
+<div class="relative z-10 bg-surface-container-lowest/95 backdrop-blur-md p-space-md rounded-lg shadow-lg flex items-center gap-space-md max-w-sm">
+<span class="material-symbols-outlined text-primary text-3xl shrink-0">location_city</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Arch Building Entrance</span>
+<span class="text-body-sm text-tertiary">Pike Street between 7th &amp; 8th Avenues</span>
+<span class="text-label-sm font-code-sm text-primary mt-1">Light Rail: Westlake Station (2 Blocks)</span>
+</div>
+</div>
+</div>
+<!-- Hotel Discount Codes & Transit Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-md">
+<span class="material-symbols-outlined text-base">hotel</span>
+                Partner Hotel Discounts
+              </div>
+<p class="text-body-sm text-tertiary">Preferred rates available at Sheraton Grand Seattle and Hyatt Regency:</p>
+<div class="mt-2 flex items-center justify-between p-2 bg-surface-container-lowest rounded border border-surface-container-high">
+<div class="flex flex-col">
+<span class="font-label-md text-on-surface font-semibold">Sheraton Grand (Block EP2025)</span>
+<span class="text-body-sm text-tertiary">$229/night • 0.2 mi from Summit</span>
+</div>
+<button class="px-space-sm py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-sm rounded" onclick="alert('Promo code EP2025 copied to clipboard!')" type="button">Copy Code</button>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-md">
+<span class="material-symbols-outlined text-base">train</span>
+                Airport Transit (Link Light Rail)
+              </div>
+<p class="text-body-sm text-tertiary">From SEA-TAC International Airport, take the 1 Line North directly to Westlake Station (~38 minutes, $3.25 one-way). The Arch building is a short 3-minute sheltered walk.</p>
+<div class="mt-auto pt-2">
+<span class="text-label-sm font-label-md text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">local_parking</span> On-site underground parking available ($38/day)
+                </span>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQs & Refund Policy Accordion -->
+<section class="bg-surface-container-lowest p-margin-md rounded-xl shadow-sm flex flex-col gap-space-md" id="faqs">
+<div>
+<div class="text-label-sm font-label-md text-primary uppercase tracking-wider mb-1">Attendee Information</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Frequently Asked Questions</h2>
+</div>
+<div class="flex flex-col gap-space-xs">
+<details class="group bg-surface-container-low rounded-lg p-space-md cursor-pointer" open="">
+<summary class="font-label-md text-headline-sm text-on-surface flex items-center justify-between list-none">
+<span>What is the cancellation and refund policy?</span>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="text-body-md text-tertiary mt-space-sm leading-relaxed">
+                Tickets are 100% refundable for any reason until October 10, 2025 at 11:59 PM PDT. Transfers to colleagues or ticket tier adjustments can be made at zero additional administration fee right up until check-in on Day 1.
+              </p>
+</details>
+<details class="group bg-surface-container-low rounded-lg p-space-md cursor-pointer">
+<summary class="font-label-md text-headline-sm text-on-surface flex items-center justify-between list-none">
+<span>Can my enterprise receive a consolidated corporate invoice?</span>
+<summary class="hidden"></summary>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="text-body-md text-tertiary mt-space-sm leading-relaxed">
+                Yes. Click "Invoice My Company" in the registration widget to generate a net-30 tax invoice including W-9 credentials and vendor setup documentation.
+              </p>
+</details>
+<details class="group bg-surface-container-low rounded-lg p-space-md cursor-pointer">
+<summary class="font-label-md text-headline-sm text-on-surface flex items-center justify-between list-none">
+<span>Are sessions recorded for in-person attendees?</span>
+<summary class="hidden"></summary>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="text-body-md text-tertiary mt-space-sm leading-relaxed">
+                All Standard and VIP ticket holders receive on-demand 4K replay access to all keynote sessions and breakout tracks within 48 hours of conference conclusion.
+              </p>
+</details>
+</div>
+</section>
+</div>
+<!-- Right Column (30% on desktop: 4 cols) - Sticky Ticket Selector -->
+<aside class="lg:col-span-4 sticky top-28 flex flex-col gap-space-md w-full">
+<!-- Registration Card Container -->
+<div class="bg-surface-container-lowest p-margin rounded-xl shadow-lg flex flex-col gap-space-md">
+<!-- Urgency Banner -->
+<div class="bg-primary-fixed/60 p-space-sm rounded-lg flex items-center gap-space-xs text-on-primary-fixed font-label-md text-label-sm">
+<span class="material-symbols-outlined text-primary-container text-base">bolt</span>
+<span>Hurry: Only <strong>14 in-person passes</strong> remaining at early bird rate!</span>
+</div>
+<!-- Select Passes Header -->
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface">Select Registration Tier</span>
+<span class="font-code-sm text-code-sm text-tertiary">USD ($)</span>
+</div>
+<!-- Tier Radio Options -->
+<div class="flex flex-col gap-space-sm" id="ticket-options">
+<!-- Tier 1: Standard Pass -->
+<label class="ticket-tier flex flex-col p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-all cursor-pointer relative" onclick="selectTier('standard', 499)">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<input class="accent-primary-container w-4 h-4 cursor-pointer" name="ticket_tier" type="radio" value="standard"/>
+<span class="font-headline-sm text-headline-sm text-on-surface">Standard Pass</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">$499</span>
+</div>
+<p class="text-body-sm text-tertiary mt-1 ml-6">Full keynote access, expo floor, daily catered lunch &amp; breakout labs.</p>
+</label>
+<!-- Tier 2: VIP All-Access (Selected by default) -->
+<label class="ticket-tier flex flex-col p-space-md rounded-lg bg-surface-container-high transition-all cursor-pointer relative ring-2 ring-primary-container" onclick="selectTier('vip', 899)">
+<div class="absolute -top-2.5 right-4 bg-primary-container text-on-primary-container font-label-sm px-2 py-0.5 rounded text-label-sm font-bold uppercase tracking-wider shadow-sm">
+                Most Popular
+              </div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<input checked="" class="accent-primary-container w-4 h-4 cursor-pointer" name="ticket_tier" type="radio" value="vip"/>
+<span class="font-headline-sm text-headline-sm text-on-surface">VIP All-Access</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">$899</span>
+</div>
+<p class="text-body-sm text-tertiary mt-1 ml-6">Includes executive lounge access, private speaker dinner, and priority workshop seating.</p>
+<div class="mt-2 ml-6 flex items-center gap-1 text-label-sm font-label-md text-primary">
+<span class="material-symbols-outlined text-sm">stars</span> Includes VIP Speaker Reception
+              </div>
+</label>
+<!-- Tier 3: Virtual Streaming Pass -->
+<label class="ticket-tier flex flex-col p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-all cursor-pointer relative" onclick="selectTier('virtual', 99)">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<input class="accent-primary-container w-4 h-4 cursor-pointer" name="ticket_tier" type="radio" value="virtual"/>
+<span class="font-headline-sm text-headline-sm text-on-surface">Virtual Pass</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">$99</span>
+</div>
+<p class="text-body-sm text-tertiary mt-1 ml-6">Live streaming of all 3 tracks + high-resolution video recordings for 1 full year.</p>
+</label>
+</div>
+<!-- Quantity Selector & Calculation -->
+<div class="flex items-center justify-between bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-md text-on-surface">Quantity of Passes:</span>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded bg-surface-container-lowest text-on-surface font-bold hover:bg-surface-container-high transition-colors flex items-center justify-center shadow-sm" onclick="changeQty(-1)" type="button">-</button>
+<span class="font-code-sm font-bold text-headline-sm w-6 text-center" id="ticket-qty">1</span>
+<button class="w-8 h-8 rounded bg-surface-container-lowest text-on-surface font-bold hover:bg-surface-container-high transition-colors flex items-center justify-center shadow-sm" onclick="changeQty(1)" type="button">+</button>
+</div>
+</div>
+<!-- Subtotal Summary -->
+<div class="flex flex-col gap-1 py-space-xs text-body-sm text-tertiary">
+<div class="flex justify-between">
+<span>Passes (<span id="calc-qty">1</span>x <span id="calc-tier-name">VIP All-Access</span>)</span>
+<span class="font-code-sm text-on-surface font-medium" id="calc-subtotal">$899.00</span>
+</div>
+<div class="flex justify-between">
+<span>WA State Event Tax &amp; Facilities (6.5%)</span>
+<span class="font-code-sm text-on-surface font-medium" id="calc-tax">$58.44</span>
+</div>
+<div class="flex justify-between text-on-surface font-headline-sm pt-space-xs text-headline-sm">
+<span class="font-bold">Estimated Total</span>
+<span class="font-code-sm font-bold text-primary" id="calc-total">$957.44</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<button class="w-full py-3 px-space-md rounded-lg bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-headline-sm text-headline-sm font-semibold transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2" onclick="alert('Proceeding to EventPrime Secure Enterprise Checkout...')" type="button">
+<span>Proceed to Registration</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="w-full py-2.5 px-space-md rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2" onclick="alert('Corporate Invoice modal will open for Net-30 payment processing.')" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+<span>Invoice My Company</span>
+</button>
+</div>
+<!-- Trust Badges & Guarantee Micro-copy -->
+<div class="flex flex-col gap-2 pt-space-xs text-body-sm text-tertiary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">verified_user</span>
+<span>100% Refundable until October 10, 2025</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">badge</span>
+<span>Instant PDF Badge &amp; Apple/Google Wallet Ticket</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">lock</span>
+<span>Encrypted 256-bit checkout via EventPrime PrimePay</span>
+</div>
+</div>
+</div>
+<!-- Help & Enterprise Desk Card -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-on-surface font-semibold">Group Registrations (5+)</span>
+<span class="text-body-sm text-tertiary">Eligible for an additional 20% team discount.</span>
+<a class="text-primary font-label-md hover:underline mt-0.5" href="#">Contact Enterprise Desk →</a>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<!-- Inline Script for Interactive Ticket Selector and Itinerary Switcher -->
+<script>
+    let currentPrice = 899;
+    let currentTierName = "VIP All-Access";
+    let quantity = 1;
+    const taxRate = 0.065;
+
+    function selectTier(tier, price) {
+      currentPrice = price;
+      if (tier === 'standard') currentTierName = "Standard Pass";
+      if (tier === 'vip') currentTierName = "VIP All-Access";
+      if (tier === 'virtual') currentTierName = "Virtual Pass";
+
+      // Toggle styles
+      const tiers = document.querySelectorAll('.ticket-tier');
+      tiers.forEach(el => {
+        el.classList.remove('ring-2', 'ring-primary-container', 'bg-surface-container-high');
+        el.classList.add('bg-surface-container-low');
+      });
+
+      const selectedRadio = document.querySelector(`input[value="${tier}"]`);
+      if (selectedRadio) {
+        selectedRadio.checked = true;
+        const container = selectedRadio.closest('.ticket-tier');
+        if (container) {
+          container.classList.remove('bg-surface-container-low');
+          container.classList.add('ring-2', 'ring-primary-container', 'bg-surface-container-high');
+        }
+      }
+
+      updatePricing();
+    }
+
+    function changeQty(delta) {
+      quantity = Math.max(1, Math.min(25, quantity + delta));
+      document.getElementById('ticket-qty').innerText = quantity;
+      updatePricing();
+    }
+
+    function updatePricing() {
+      const subtotal = currentPrice * quantity;
+      const tax = subtotal * taxRate;
+      const total = subtotal + tax;
+
+      document.getElementById('calc-qty').innerText = quantity;
+      document.getElementById('calc-tier-name').innerText = currentTierName;
+      document.getElementById('calc-subtotal').innerText = '$' + subtotal.toFixed(2);
+      document.getElementById('calc-tax').innerText = '$' + tax.toFixed(2);
+      document.getElementById('calc-total').innerText = '$' + total.toFixed(2);
+    }
+
+    function switchDay(day) {
+      const switcherButtons = document.querySelectorAll('#agenda-day-switcher button');
+      switcherButtons.forEach((btn, index) => {
+        if (index + 1 === day) {
+          btn.className = "px-space-md py-1.5 rounded font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-sm";
+        } else {
+          btn.className = "px-space-md py-1.5 rounded font-label-md text-label-md text-tertiary hover:text-on-surface";
+        }
+      });
+
+      const dayContent = document.getElementById('day-content');
+      if (day === 2) {
+        dayContent.innerHTML = `
+          <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+            <div class="flex items-start gap-space-md">
+              <div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">09:30 - 11:30 AM</div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-secondary-fixed text-on-secondary-fixed">HANDS-ON LAB</span>
+                  <span class="text-body-sm text-tertiary">Cloud Compute Lab 1</span>
+                </div>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Fine-Tuning DeepSeek & Llama-3 on AWS Trainium2 Instances</h4>
+                <p class="font-body-sm text-body-sm text-tertiary">Practical hyperparameter balancing, Neuron SDK profiling, and FP8 quantization benchmarks.</p>
+              </div>
+            </div>
+            <span class="text-label-sm font-label-md text-secondary shrink-0">Priority Seating</span>
+          </div>
+          <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+            <div class="flex items-start gap-space-md">
+              <div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">02:00 - 04:00 PM</div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-primary-fixed text-on-primary-fixed">CHALLENGE ARENA</span>
+                  <span class="text-body-sm text-tertiary">Expo Stage South</span>
+                </div>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Live Distributed Chaos Engineering: Surviving Sudden Transit Gateway Partitions</h4>
+                <p class="font-body-sm text-body-sm text-tertiary">Two teams of elite SREs face off in real-time disaster recovery on live multi-region infrastructure.</p>
+              </div>
+            </div>
+            <span class="text-label-sm font-label-md text-error shrink-0">Live Audience Vote</span>
+          </div>
+        `;
+      } else if (day === 3) {
+        dayContent.innerHTML = `
+          <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+            <div class="flex items-start gap-space-md">
+              <div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">10:00 - 12:00 PM</div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-primary-container text-on-primary-container">EXECUTIVE FORUM</span>
+                  <span class="text-body-sm text-tertiary">Summit Boardroom B</span>
+                </div>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">CTO & VP Engineering Roundtable: 2026 AI Infrastructure Budgets & Capex</h4>
+                <p class="font-body-sm text-body-sm text-tertiary">Chatham House rules discussion on balancing cloud vs on-prem GPU cluster economics.</p>
+              </div>
+            </div>
+            <span class="text-label-sm font-label-md text-secondary shrink-0">VIP Access Only</span>
+          </div>
+          <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-start justify-between gap-space-md hover:bg-surface-container-high transition-colors">
+            <div class="flex items-start gap-space-md">
+              <div class="font-code-sm text-code-sm font-semibold text-primary shrink-0 w-28 pt-0.5">04:00 - 06:00 PM</div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-label-sm font-label-md bg-secondary-fixed text-on-secondary-fixed">CLOSING RECEPTION</span>
+                  <span class="text-body-sm text-tertiary">Grand Ballroom</span>
+                </div>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Community Wrap-Up, Hackathon Awards & 2026 Summit Announcements</h4>
+                <p class="font-body-sm text-body-sm text-tertiary">Closing toasts, presentation of open-source grants, and final attendee prize drawings.</p>
+              </div>
+            </div>
+            <span class="text-label-sm font-label-md text-secondary shrink-0">All Passes</span>
+          </div>
+        `;
+      } else {
+        // Reload Day 1
+        location.reload();
+      }
+    }
+  </script>
+</div></main><footer class="w-full bg-on-secondary-fixed-variant text-surface-container-lowest mt-margin-lg"><a class="block w-full py-space-md text-center bg-secondary font-label-md text-surface-container-lowest hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" href="#">Back to top</a><div class="max-w-7xl mx-auto px-margin-lg py-margin-lg grid grid-cols-1 md:grid-cols-4 gap-gutter-lg"><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-surface-container-lowest mb-space-xs">Get to Know Us</span><a class="font-body-sm text-surface-container-highest hover:underline" href="#">About EventPrime</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Careers</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Press Releases</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">EventPrime Science</a></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-surface-container-lowest mb-space-xs">Host with Us</span><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Sell Event Tickets</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Host Virtual Summits</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Affiliate Program</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Advertise Your Event</a></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-surface-container-lowest mb-space-xs">Payment &amp; Badges</span><a class="font-body-sm text-surface-container-highest hover:underline" href="#">EventPrime Prime Card</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Corporate Billing</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Reloadable Credits</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Currency Converter</a></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-surface-container-lowest mb-space-xs">Let Us Help You</span><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Your Account &amp; Bookings</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Returns &amp; Refunds</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Event Safety Guidelines</a><a class="font-body-sm text-surface-container-highest hover:underline" href="#">Customer Support</a></div></div><div class="border-t border-on-secondary-fixed py-space-lg text-center bg-on-secondary-fixed text-surface-container-high font-body-sm">© 2024 EventPrime, Inc. or its affiliates. All rights reserved. Built for enterprise-scale conferences and ticketing.</div></footer></body></html>
