@@ -59,11 +59,16 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <SiteHeader
-        searchSlot={(placement) => (
+        searchSlotDesktop={
           <Suspense fallback={<div className="h-10 w-full max-w-md rounded-md bg-surface-container" />}>
-            <CatalogSearch id={`catalog-search-${placement}`} />
+            <CatalogSearch id="catalog-search-desktop" />
           </Suspense>
-        )}
+        }
+        searchSlotMobile={
+          <Suspense fallback={<div className="h-10 w-full max-w-md rounded-md bg-surface-container" />}>
+            <CatalogSearch id="catalog-search-mobile" />
+          </Suspense>
+        }
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">

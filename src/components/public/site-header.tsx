@@ -18,15 +18,19 @@ import { cn } from "@/lib/utils";
  * backdrop, and Escape closes it.
  */
 export function SiteHeader({
-  searchSlot,
+  searchSlotDesktop,
+  searchSlotMobile,
 }: {
   /**
-   * Rendered twice — once for the desktop row, once for mobile — so it is a
-   * function rather than an element. A single element would be duplicated in
-   * the DOM and duplicate the `id` on the search input, which breaks the
-   * `<label for>` association for screen-reader users.
+   * Rendered once for the desktop row and once for mobile. Passed as two
+   * separate ReactNode props (instead of a single render function) because
+   * SiteHeader is a Client Component — functions cannot be passed from a
+   * Server Component across the boundary. Each slot receives its own element
+   * so the `id` on the search input stays unique, which keeps the
+   * `<label for>` association valid for screen-reader users.
    */
-  searchSlot?: (placement: "desktop" | "mobile") => React.ReactNode;
+  searchSlotDesktop?: React.ReactNode;
+  searchSlotMobile?: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -79,9 +83,9 @@ export function SiteHeader({
           <Logo />
         </Link>
 
-        {searchSlot && (
+        {searchSlotDesktop && (
           <div className="ml-auto hidden flex-1 justify-end md:flex">
-            {searchSlot("desktop")}
+            {searchSlotDesktop}
           </div>
         )}
 
@@ -98,11 +102,11 @@ export function SiteHeader({
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          {searchSlot && (
+          {searchSlotMobile && (
             // Capped so the field never squeezes the menu button off-screen on
             // narrow phones.
             <div className="max-w-[min(14rem,45vw)] flex-1 md:hidden">
-              {searchSlot("mobile")}
+              {searchSlotMobile}
             </div>
           )}
           <Button

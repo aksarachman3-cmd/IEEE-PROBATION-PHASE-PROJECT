@@ -218,10 +218,9 @@ export function CatalogFilters({ facets }: { facets: CatalogFacets }) {
             onChange={(value) => update("price", value)}
             options={[
               { value: "all", label: "Any price" },
-              ...Object.entries(PRICE_FILTER_LABELS).map(([value, label]) => ({
-                value,
-                label,
-              })),
+              ...Object.entries(PRICE_FILTER_LABELS)
+                .filter(([value]) => value !== "all")
+                .map(([value, label]) => ({ value, label })),
             ]}
           />
           <FilterSelect
